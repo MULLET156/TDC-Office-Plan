@@ -144,7 +144,13 @@ A row of 4–6 tiles, one per status of the thing the page lists (Today / Overdu
 
 ### Page banner
 
-Under the tiles: a soft band in the page colour with a 6px edge in the page colour on the left. Icon and title (Archivo 24px) on the left, a mono count on the right ("18 cases", "24 need attention"). One optional line of help text under it.
+Under the tiles: a soft band in the page colour with a 6px edge in the page colour on the left. Icon and title (Archivo 24px) on the left, a mono count on the right ("18 cases", "24 need attention").
+
+**Info button.** Every page has a one-line help text, and it stays **hidden behind a small (i) button** right after the title:
+- A 22px circle (20px on phones) with an italic serif "i", outlined in the page colour; filled in the page colour when open. Its tap area is 44px (invisible padding around it).
+- Tap to show the help line under the title (full width of the banner); tap again to hide it.
+- Closed when a page first opens, and closes again when you change page. Pages without help text don't show the button.
+- `aria-label="About this page"`, `aria-expanded` and `aria-controls` pointing at the help line. Works the same on desktop and phones.
 
 ### Search and filters
 
@@ -190,7 +196,7 @@ Modules use these instead of writing their own:
 | Class | What |
 |---|---|
 | `.tdc-stats` / `.tdc-stat[data-status]` (+ `aria-selected`) | Status tile row and tiles (become the phone tab bar) |
-| `.tdc-pagehead` | Page banner (`h2`, `.tdc-count`, optional `p`) |
+| `.tdc-pagehead` | Page banner (`h2`, `.tdc-count`), with `.tdc-info` (the (i) button) and `.tdc-help` (the help line, hidden until the button is tapped) |
 | `.tdc-find` | Search box + filters row |
 | `.tdc-seg` | Segmented control (Group by), buttons with `aria-pressed` |
 | `.tdc-list`, `.tdc-group`, `.tdc-row[data-status]` | List card, group heading, row with status stripe |
@@ -209,5 +215,6 @@ Modules use these instead of writing their own:
 
 ## Changes
 
+- 2026-11-16: page banners get an (i) info button that shows and hides the page's help line (from the Maintenance Tracker), now in all three apps.
 - 2026-11-16: the line under the header and the page banner follow the current page's colour; exactly one 4px line; plain page background (no tint). Search boxes and filter dropdowns use `--tdc-sunk`.
 - 2026-11-16: first version, from the shared look Ryan approved for Lab Tracker, Supply Room and Maintenance Tracker.
