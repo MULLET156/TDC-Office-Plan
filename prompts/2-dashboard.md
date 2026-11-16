@@ -28,7 +28,7 @@ First version (v0.1):
 - Module base URLs are set in Settings: HTTPS subdomains in the design stage, 127.0.0.1 ports in the live stage.
 - The signed pass-through /m/<id>/... exactly per CONTRACT.md, including large audio uploads.
 - Reading module manifests, the tile grid, and /api/nav and /api/me. If a module is down, its tiles show "Not responding".
-- /shared/tdc.css and /shared/shell.js (header, nav, icons). Make it clean and touch-friendly, and use Toledo Dental Care's name. Ask me for logo files.
+- /shared/tdc.css and /shared/shell.js (header, nav, icons). Make it clean and touch-friendly, and use Toledo Dental Care's name and the logos in TDC-Office-Plan/brand/ (copy them into the Dashboard and serve them under /shared/). If they aren't there yet, use a text logo and ask me.
 - A small built-in **sample module** (examples/hello-module/) that follows the contract and shows the other agents exactly how to verify the signature, serve a manifest and a tile, and use the shared look. Also a module **contract checker** script (`node scripts/check-module.js http://127.0.0.1:3101`) that other agents run to confirm their module is compliant.
 - Tests for login, sessions, the signature, the pass-through, and header stripping.
 
