@@ -45,7 +45,9 @@ Never use colour alone: every status also has a word or an icon (the "911" chip,
 
 ### One accent per app
 
-The accent colours the strip under the header, the active status tile, the page banner, the main "+ New" button and focus rings. **It is the only colour that changes between apps.** A module sets it once: `<body data-module="daysheet">` and `tdc.css` picks the accent.
+The accent is the app's main colour: the "+ New" button, focus rings, and the default page colour. **It is the only colour that changes between apps.**
+
+**Page colour.** The line under the header and the page banner take the colour of the page you're on: the selected status tile's colour (Overdue = red, Due soon = amber, Ready = green …), or the colour of the header button that opened the page (All cases = navy, Setup = grey). The app's home page uses its accent. This is the same in every app. A module sets it once: `<body data-module="daysheet">` and `tdc.css` picks the accent.
 
 | App | Accent | Soft | Notes |
 |---|---|---|---|
@@ -102,13 +104,14 @@ Never stretch, squash or crop the logo. Set its height and let the width follow 
 ## 5. Page layout
 
 - **Width:** content is at most **1140px** wide, centred, with 16px side padding. Same for header and page.
+- **Page background:** plain `--tdc-bg` (warm off-white) under the header on every page. Don't tint it with the page colour, and don't add a second line at the top of the page area. Sticky bars inside the page (like "Add to list") use the same plain background.
 - **Corners:** 10px on cards, tiles, buttons and inputs. Pill buttons use full rounding.
 - **Touch:** everything you can tap is at least 44px tall on tablets and phones (36px header pills are fine on desktop only).
 - **Sizes to check:** 1400px, 1100px, 1000px, 768px (tablet) and 390px (phone).
 
 ### Header (drawn by `shell.js`)
 
-Desktop and wide tablet (1100px and up): a white bar with a **4px strip in the app's accent** along the bottom, laid out in three columns:
+Desktop and wide tablet (1100px and up): a white bar that runs the full width of the window, with **one 4px line** along its bottom edge in the current page colour (see §2). No second line, no shadow instead of it. Laid out in three columns:
 
 ```
 | logo (240px column) | App name (Archivo 28px)         | user · Lock · Log out      |
@@ -141,7 +144,7 @@ A row of 4–6 tiles, one per status of the thing the page lists (Today / Overdu
 
 ### Page banner
 
-Under the tiles: a soft band in the accent colour with a 6px accent edge on the left. Icon and title (Archivo 24px) on the left, a mono count on the right ("18 cases", "24 need attention"). One optional line of help text under it.
+Under the tiles: a soft band in the page colour with a 6px edge in the page colour on the left. Icon and title (Archivo 24px) on the left, a mono count on the right ("18 cases", "24 need attention"). One optional line of help text under it.
 
 ### Search and filters
 
@@ -206,4 +209,5 @@ Modules use these instead of writing their own:
 
 ## Changes
 
+- 2026-11-16: the line under the header and the page banner follow the current page's colour; exactly one 4px line; plain page background (no tint). Search boxes and filter dropdowns use `--tdc-sunk`.
 - 2026-11-16: first version, from the shared look Ryan approved for Lab Tracker, Supply Room and Maintenance Tracker.
