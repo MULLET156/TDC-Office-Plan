@@ -6,6 +6,7 @@ This repo is the **big plan** for Toledo Dental Care's office web apps. Every ag
 |---|---|
 | [PLAN.md](PLAN.md) | The goal, the modules, who owns what, the rules, build order |
 | [CONTRACT.md](CONTRACT.md) | The technical contract every module must follow (ports, login, manifest, tiles, shared look) |
+| [DESIGN.md](DESIGN.md) | The shared look: colours, fonts, logo, header, tiles, rows, phone layout. Pictures in [brand/reference/](brand/reference/) |
 | [SITE-OUTLINE.md](SITE-OUTLINE.md) | Every page of the site and what's on it |
 | [STATUS.md](STATUS.md) | Where each module stands. Each agent updates only its own row |
 | [CLAUDE.md](CLAUDE.md) | Short instructions that load automatically for agents |

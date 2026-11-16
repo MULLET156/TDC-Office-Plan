@@ -16,6 +16,7 @@ The practice runs **Open Dental 26.2.40**. Every module reaches Open Dental only
 | Voice Charting | `MULLET156/TDC-Voice-Charting` | Speak, then review a draft treatment plan or note, then Confirm to write it to Open Dental. Includes the speech-to-text service. | **Read and write** (chart only, never signs) |
 | Practice Numbers | `MULLET156/TDC-Practice-Numbers` | Production, collections, A/R, new patients, trends. Owner and admin only. | Read only |
 | Connector and Gateway | `MULLET156/opendental-claude` (exists) | Shared Open Dental code (`core/`), the gateway, and **all reports**. | Owns it |
+| Shared Design | TDC-Office-Plan (DESIGN.md, `brand/`) | Keeps every page in one look: DESIGN.md, logos, fonts, reference pictures; keeps Lab Tracker, Supply Room and Maintenance Tracker in line; reviews the Dashboard's shared look and module pages. | None |
 | Installer (later) | `MULLET156/TDC-Office-Installer` | One Windows `Setup.exe` that installs the gateway, the dashboard and the modules as Windows services. | — |
 
 Apps that already exist stay where they are. The Dashboard only links to them:

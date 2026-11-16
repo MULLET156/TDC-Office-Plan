@@ -124,11 +124,12 @@ The Dashboard serves the shared pieces, and every module page includes them:
 
 - `shell.js` draws the header: logo, module nav (from `/api/nav`), user name and log out.
 - `GET /api/me` returns `{ user, name, roles }`.
-- Use the CSS variables and classes in `tdc.css`: `--tdc-*` colours, `.tdc-card`, `.tdc-table`, `.tdc-btn`, `.tdc-btn-primary`, `.tdc-badge-ok|warn|alert`, `.tdc-form`.
-- Don't ship your own fonts or frameworks.
+- **Follow [DESIGN.md](DESIGN.md)** for colours, fonts, logo, header, status tiles, rows and the phone layout. `data-module` on `<body>` sets the module's accent colour.
+- Use the CSS variables and classes in `tdc.css`: `--tdc-*` colours, `.tdc-card`, `.tdc-table`, `.tdc-btn`, `.tdc-btn-primary`, `.tdc-badge-ok|warn|alert`, `.tdc-form`, plus the list classes in DESIGN.md §8 (`.tdc-stats`, `.tdc-pagehead`, `.tdc-find`, `.tdc-seg`, `.tdc-row`, `.tdc-chip`, `.tdc-meter`, `.tdc-hbtn`). Page buttons go in `<nav class="tdc-actions">`; `shell.js` places them in the header.
+- Don't ship your own fonts, colours or frameworks. The Dashboard serves the fonts from `/shared/fonts/`; never load fonts from an outside site.
 - **No inline scripts.** The Dashboard's security policy (`script-src 'self'`) blocks `<script>…</script>` with code inside and `on…=` attributes such as `onclick`. Load scripts from files with `<script src="…" defer>`. Inline `style="…"` is fine.
 - Requests a page makes **on a timer** (auto-refresh, polling) send the header `X-TDC-Background: 1`, so a screen left open doesn't keep an idle user logged in.
-- Pages must work at tablet width (768px) and up, with touch targets at least 44px.
+- Pages must work at tablet width (768px) and up, with touch targets at least 44px. Content must not break at phone width (390px): `shell.js` handles the phone header and bottom bar.
 
 ## 7. Open Dental
 
@@ -158,5 +159,6 @@ The Dashboard serves the shared pieces, and every module page includes them:
 
 ## Changes
 
+- 2026-11-16: §6 now points to DESIGN.md, the shared design Ryan approved (warm base from the logo, one accent per module, Archivo/Figtree/JetBrains Mono served by the Dashboard, new list classes, phone layout). Still contract version 1: additive for modules.
 - 2026-11-16: the design stage uses Ryan's Open Dental **demo database** through the office gateway and a secure tunnel. The stage guard is now the gateway's `"stage"` (`design`/`live`) instead of `"fake": true`. No Open Dental data on disk on Hostinger. Still contract version 1.
 - 2026-11-15: clarified the signature (key, `pathAndQuery`), tiles are requested as the logged-in user, pass-through cookie and redirect rules, no inline scripts, `X-TDC-Background` (issues #6, #7, #8). Still contract version 1: no module had been built yet.
