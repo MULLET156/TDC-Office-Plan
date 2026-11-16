@@ -1,0 +1,63 @@
+# Ryan's checklist: repos and agents
+
+## Step 1 — Create the repos on GitHub (once)
+
+Go to github.com → **New repository**. For each repo:
+- Owner: **MULLET156**
+- Choose **Private**
+- Tick **Add a README file**. A repo needs at least one file before an agent can branch from it.
+- License: none for now. You can add MIT later, like opendental-claude.
+
+- [ ] `TDC-Office-Plan`: then upload the files from this folder (Add file → Upload files → commit to `main`)
+- [ ] `TDC-Dental-Dashboard`
+- [ ] `TDC-Dental-Daysheet`
+- [ ] `TDC-Treatment-Finder`
+- [ ] `TDC-Voice-Charting`
+- [ ] `TDC-Practice-Numbers`
+- [ ] `TDC-Office-Installer` (can wait until phase 5)
+
+`opendental-claude` already exists.
+
+## Step 1b — Hostinger (design stage)
+
+- [ ] Check that your Hostinger plan can run **Node.js apps**. Business and Cloud plans can. Each module becomes its own app on its own subdomain; the agents will tell you the subdomain names when they're ready to deploy.
+- [ ] Only fake data ever goes on Hostinger.
+
+## Step 2 — Start the agents, in this order
+
+Each agent is a **new Claude Code session**. In each session:
+1. Attach the repos listed for that agent.
+2. Paste in its kickoff message from `prompts/`.
+3. Let it work. It ends by opening a pull request and telling you what to check.
+
+| # | Agent | Start when | Repos to attach (✎ = it may change this repo) | Kickoff message |
+|---|---|---|---|---|
+| 1 | **Connector** | Now | opendental-claude ✎, TDC-Office-Plan | `prompts/1-connector.md` |
+| 2 | **Dental Dashboard** | Now | TDC-Dental-Dashboard ✎, TDC-Office-Plan | `prompts/2-dashboard.md` |
+| 3 | **Dental Daysheet** | Dashboard v0.1 merged | TDC-Dental-Daysheet ✎, TDC-Office-Plan, TDC-Dental-Dashboard, opendental-claude | `prompts/3-daysheet.md` |
+| 4 | **Treatment Finder** | Dashboard v0.1 merged | TDC-Treatment-Finder ✎, TDC-Office-Plan, TDC-Dental-Dashboard, opendental-claude | `prompts/4-treatment-finder.md` |
+| 5 | **Voice Charting** | Dashboard v0.1 merged and gateway mode released | TDC-Voice-Charting ✎, TDC-Office-Plan, TDC-Dental-Dashboard, opendental-claude | `prompts/5-voice-charting.md` |
+| 6 | **Practice Numbers** | Dashboard v0.1 merged | TDC-Practice-Numbers ✎, TDC-Office-Plan, TDC-Dental-Dashboard, opendental-claude | `prompts/6-practice-numbers.md` |
+| 7 | **Installer** | All modules v0.1 | TDC-Office-Installer ✎, plus all of the above | `prompts/7-installer.md` |
+
+The other repos are attached **read-only** so the agent can look at them. Agents change only their own repo. If you can attach those repos with read access only, do that.
+
+Keep **2 or 3 agents running at once**. Every PR needs your review.
+
+## Step 3 — For each PR an agent opens
+
+- [ ] Read the PR description. Agents are told to write a "How to test" section in plain language.
+- [ ] Check that the tests passed (green check on the PR).
+- [ ] For anything touching Open Dental, test on **PatNum 8133** only.
+- [ ] Merge, then mark it in `STATUS.md` in TDC-Office-Plan.
+- [ ] To continue an agent's work later: open its session again, or start a new one with the same kickoff message plus "Continue from STATUS.md."
+
+## Things only you can do
+
+- [ ] Merge opendental-claude PR #1 and PR #2 after your live test. The Connector agent builds on them.
+- [ ] Confirm a BAA with Anthropic for the API (needed before Voice Charting touches real patients).
+- [ ] Check the office server specs (CPU, RAM, GPU) for Whisper.
+- [ ] Decide which procedure codes count as "hygiene".
+- [ ] Confirm the roles table in `SITE-OUTLINE.md`.
+- [ ] Choose the web address (for example office.toledodentalcare.com) and give the Dashboard agent access to set up its DNS records when it asks. Your domain is currently with GoDaddy.
+- [ ] Never paste keys or passwords into an agent chat. Agents will tell you which file to put them in on the server.
