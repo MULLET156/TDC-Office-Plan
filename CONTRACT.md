@@ -33,6 +33,9 @@ The Dashboard passes `https://tdc-office/m/<module-id>/<rest>` to `http://127.0.
 
 Request and response bodies are passed through unchanged, up to 25 MB (audio uploads), along with `Content-Type`. The Dashboard sets the security headers on every response.
 
+- The browser's cookies and `Authorization` header are not passed to modules, and `Set-Cookie` from a module is dropped. Keep per-user state on the server, keyed by `X-TDC-User`.
+- A module redirect to `/x` is rewritten to `/m/<module-id>/x`. Redirects to other sites are dropped.
+
 ## 3. Login and identity
 
 Only the Dashboard handles logins. It strips any incoming `X-TDC-*` headers from the browser, then adds these to every request it passes on:
@@ -47,11 +50,16 @@ Only the Dashboard handles logins. It strips any incoming `X-TDC-*` headers from
 | `X-TDC-Sig` | hex HMAC-SHA256 (see below) |
 
 **Signature:** `HMAC-SHA256(MODULE_SECRET, time + "\n" + method + "\n" + pathAndQuery + "\n" + user + "\n" + roles + "\n" + base)`
-- `pathAndQuery` is the path after the prefix is removed, including the query string.
+- The HMAC key is the `MODULE_SECRET` string exactly as written in `.env` (the hex text itself, as UTF-8), not the decoded bytes.
+- `pathAndQuery` is the request target exactly as the module receives it (`req.url` in Node): the path after the prefix is removed, plus the query string.
+- The six values are joined with a single `\n`; `method` is upper-case. The result is lower-case hex.
+- `X-TDC-Name` is not signed. Names with non-ASCII letters (José) are percent-encoded; decode with `decodeURIComponent`.
+- Reference code: `examples/hello-module/tdc-verify.js` in TDC-Dental-Dashboard. Check a module with `scripts/check-module.js` there.
 - Each module has its own `MODULE_SECRET`, at least 32 random bytes in hex, in its `.env`. The Dashboard holds a copy of each one in its own config.
 - A module **must reject** with `401` any request whose signature is wrong or missing, or whose time is more than 30 seconds from now. Compare signatures with `crypto.timingSafeEqual`.
 - Exceptions: `GET /health` needs no signature. Module-to-module calls are not allowed; go through the Dashboard or the gateway.
-- The Dashboard calls `/manifest.json` and `/tiles/*` as the system user `dashboard` with role `system`.
+- The Dashboard calls `/manifest.json` as the system user `dashboard` with role `system`.
+- The Dashboard calls `/tiles/*` **as the logged-in staff member** (their own `X-TDC-User` and `X-TDC-Roles`), so a tile can be personal, like *My drafts waiting*. It only asks for a tile when the user has one of the tile's `roles`; the module still checks roles itself.
 
 **Roles:** `owner`, `admin`, `doctor`, `hygienist`, `assistant`, `front`. A module checks roles itself for each page and action.
 
@@ -100,7 +108,7 @@ Each module serves `GET /manifest.json`:
 - `status` is `ok`, `warn` or `alert`.
 - `items` holds at most 8 entries.
 - `href` values are module-relative; the Dashboard adds `/m/<id>`.
-- Tiles must answer within 3 seconds. Cache them if needed.
+- Tiles must answer within 3 seconds. Cache them if needed (per user, if the tile depends on who is asking).
 - Patient names are allowed on tiles, since the site is office-only. Never include phone numbers, birthdates or SSNs.
 
 ## 6. Shared look
@@ -117,6 +125,8 @@ The Dashboard serves the shared pieces, and every module page includes them:
 - `GET /api/me` returns `{ user, name, roles }`.
 - Use the CSS variables and classes in `tdc.css`: `--tdc-*` colours, `.tdc-card`, `.tdc-table`, `.tdc-btn`, `.tdc-btn-primary`, `.tdc-badge-ok|warn|alert`, `.tdc-form`.
 - Don't ship your own fonts or frameworks.
+- **No inline scripts.** The Dashboard's security policy (`script-src 'self'`) blocks `<script>…</script>` with code inside and `on…=` attributes such as `onclick`. Load scripts from files with `<script src="…" defer>`. Inline `style="…"` is fine.
+- Requests a page makes **on a timer** (auto-refresh, polling) send the header `X-TDC-Background: 1`, so a screen left open doesn't keep an idle user logged in.
 - Pages must work at tablet width (768px) and up, with touch targets at least 44px.
 
 ## 7. Open Dental
@@ -144,3 +154,7 @@ The Dashboard serves the shared pieces, and every module page includes them:
 - `server.js`, `manifest.json` (or generated), `test/`
 - `vendor/opendental-core/` once the module reads Open Dental
 - CI that runs `npm test` on Windows and Linux
+
+## Changes
+
+- 2026-11-15: clarified the signature (key, `pathAndQuery`), tiles are requested as the logged-in user, pass-through cookie and redirect rules, no inline scripts, `X-TDC-Background` (issues #6, #7, #8). Still contract version 1: no module had been built yet.
