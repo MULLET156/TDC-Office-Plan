@@ -28,11 +28,21 @@ Apps that already exist stay where they are. The Dashboard only links to them:
 | | **Design stage** (now) | **Live stage** (later) |
 |---|---|---|
 | Where | Ryan's **Hostinger** account (Node.js apps, one subdomain per module) | **Office server**, with the module ports below |
-| Data | **Fake data only**, from the Connector's *demo gateway* (fake Open Dental) on Hostinger | Real Open Dental through the real gateway |
+| Data | Ryan's **Open Dental demo database** (no real patients), through the **real gateway on the office server**, which Hostinger reaches over a **secure tunnel** (Cloudflare Tunnel, HTTPS) | Ryan's real database through the same gateway, on the office network only (tunnel removed) |
 | Who uses it | Ryan and staff trying out designs | Staff, on the office network |
 | Deploys | Merging to `main` auto-deploys that repo to Hostinger | Installer / updater on the office server |
 
-**The design stage must never touch real patient data.** Every module reads `TDC_STAGE` (`design` or `live`). In `design`, it checks at startup that the gateway's `/health` reports `"fake": true`, and refuses to start if not. Nothing on Hostinger is ever given the real gateway's address or keys.
+**The design stage must never touch real patient data.** Ryan's office Open Dental currently runs a **demo database**, so the prototype uses it through the real gateway. Ryan switches the API to the real database only after the suite is built, and **before that switch, everything that handles patient data moves off Hostinger** to the office server, and the tunnel is removed.
+
+The guard: the gateway has a setting `stage` (`design` or `live`), shown on its `/health`. Every module reads `TDC_STAGE`. In `design`, it checks at startup (and again every few minutes) that the gateway's `/health` reports `"stage": "design"`, and refuses to run if not. When Ryan points the gateway at the real database, he sets the gateway to `live`, and every Hostinger module stops by itself.
+
+**Keep data off Hostinger:**
+- The gateway sends each module **only what that module needs**: its own key, its own allow list, and reports that return only the columns a page shows.
+- Hostinger modules **don't store Open Dental data**. They keep it in memory only, briefly. `data/` holds only the module's own records (saved lists as PatNums plus a call status, drafts while they wait for Confirm).
+- No patient data in logs, ever.
+- **Writes** (Voice Charting only) always go through a review screen and a **Confirm** tap, then a read-back. Nothing is ever signed.
+
+The local *demo gateway* (fake data, `npm run dev` in opendental-claude) is still used for automated tests and for building on a laptop.
 
 The same code runs in both stages. Only the settings change (see CONTRACT.md §1). Moving to live means installing the same repos on the office server. The Dental Dashboard and Practice Numbers (totals only) could stay on Hostinger later, but that's decided when we go live.
 
@@ -62,7 +72,7 @@ All of it runs on the office server. **No patient data goes on Hostinger or on a
 2. **Never push to `main`.** Work on a branch and open a pull request. Ryan reviews and merges.
 3. **Before changing anything**, pull the latest `main` and check open PRs, so newer work isn't overwritten.
 4. **Zero dependencies:** Node.js 20+ built-in modules only. External programs such as the Whisper speech engine are allowed, but they're installed by the installer, not through npm.
-5. **No real patient data** anywhere: code, tests, issues, logs or screenshots. Use fake data. For live testing, use only test patient **Ryan A. Millet, PatNum 8133**.
+5. **No patient data** in code, tests, issues, logs or screenshots, not even from the demo database. Tests use fake data. Reading any patient in the demo database is fine while testing. **Writes** in testing go to test patient **Ryan A. Millet, PatNum 8133** unless Ryan says otherwise.
 6. **Never ask for, print or commit secrets** (Open Dental keys, gateway keys, the Anthropic key, module secrets). They live in a `.env` file that's never committed, and later in Windows DPAPI storage set up by the installer.
 7. **Open Dental only through the gateway**, each module with its own gateway key. Use the shared `core/` code. Don't write your own Open Dental calls.
 8. **Only the Connector agent edits `opendental-claude`.** Need a new report? Open an issue there titled `Report request: <name>` that describes the inputs and outputs. Meanwhile, build against fake data shaped like that report.
@@ -85,7 +95,7 @@ Keep **2 or 3 agents running at a time**. Each PR waits for Ryan's review, so mo
 
 ## Decisions already made
 
-- Design stage on Hostinger with fake data; live stage on the office server (see "Two stages").
+- Design stage: modules on Hostinger, data from the Open Dental **demo database** through the office gateway and a secure tunnel. Live stage: everything that handles patient data on the office server (see "Two stages").
 - **Fully web-based for staff: nothing is installed on any office PC or tablet.** Staff open a link (for example `https://office.toledodentalcare.com`) in Chrome or Edge and log in with their password. No certificate to trust, no per-device setup.
 - The only install is on the **office server**, done once by the Installer.
 - Hosted in the office, on the same server as the gateway. HTTPS is required (browsers only allow the microphone on secure pages). It uses a **real, publicly trusted certificate** (Let's Encrypt, free) for a name under the practice's own domain, proven by DNS, so the server never has to be open to the internet. The name points to the server's office-network address, so it only works inside the office.
@@ -93,7 +103,7 @@ Keep **2 or 3 agents running at a time**. Each PR waits for Ryan's review, so mo
 - Claude is called through the Anthropic API with Ryan's own key, with plain `fetch` and no SDK. Ryan must confirm a BAA with Anthropic before the app is used on real patients.
 - Staff log in individually, so the audit trail shows who dictated and who confirmed each change.
 - Devices: Windows PCs in operatories, front-desk PCs, Android tablets.
-- "Hygiene" treatment is left out of the "planned but not scheduled" lists.
+- "Hygiene" treatment is left out of the "planned but not scheduled" lists. Hygiene codes (Ryan, 2026-11-16): **D0120, D0140, D0150, D0210, D0272, D0274, D1110, D1120, D1206, D1208, D4341, D4342, D4346, D4355, D4910**. Keep the list in one setting, not hard-coded per module.
 - "X-ray eligibility" means the insurance plan's frequency limits plus the dates x-rays were last taken. A live eligibility check with the insurer through a clearinghouse is out of scope for now.
 
 ## Open questions (Ryan)

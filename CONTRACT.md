@@ -10,7 +10,8 @@ Every module reads these settings: `TDC_STAGE` (`design` or `live`), `PORT`, `MO
 - Each module is its own Hostinger Node.js app on its own subdomain, for example `daysheet-dev.<domain>`. It listens on the `PORT` Hostinger gives it.
 - The Dental Dashboard passes requests to the module's HTTPS base URL.
 - Because the module can be reached from the internet, it must reject every unsigned request except `/health`, exactly as in §3.
-- `GATEWAY_URL` points to the demo gateway (fake data). Each module checks that the gateway's `/health` says `"fake": true` and refuses to start otherwise.
+- `GATEWAY_URL` points to the office gateway through its tunnel address (HTTPS). Each module checks that the gateway's `/health` says `"stage": "design"`, at startup and every 5 minutes, and stops serving patient pages if it doesn't. The local demo gateway (fake data) also says `"stage": "design"`.
+- Modules on Hostinger keep Open Dental data in memory only (short cache, a few minutes at most), never on disk.
 
 **Live stage (office server)** uses the table below.
 
@@ -142,7 +143,7 @@ The Dashboard serves the shared pieces, and every module page includes them:
 - **Logs:** one JSON line per request with time, user, method, path, status and milliseconds. No patient names, no request bodies, no notes text.
 - **Config:** `.env` (never committed) plus `.env.example` (committed, no real values).
 - **Required env:** `TDC_STAGE`, `PORT`, `MODULE_SECRET`, `GATEWAY_URL` (default `http://127.0.0.1:8787`), `GATEWAY_KEY`.
-- **Data files** (users, saved lists, drafts) go under `data/`, which is never committed. In the design stage they hold fake data only.
+- **Data files** (users, saved lists, drafts) go under `data/`, which is never committed. They never hold copies of Open Dental data: only the module's own records, referring to patients by PatNum.
 - **Start:** `npm start`, which runs `node server.js`. **Test:** `npm test`, which runs `node --test` with fake data only.
 - **Windows:** each repo includes `start.cmd` for running by hand. Windows services come later, from the Installer.
 
@@ -157,4 +158,5 @@ The Dashboard serves the shared pieces, and every module page includes them:
 
 ## Changes
 
+- 2026-11-16: the design stage uses Ryan's Open Dental **demo database** through the office gateway and a secure tunnel. The stage guard is now the gateway's `"stage"` (`design`/`live`) instead of `"fake": true`. No Open Dental data on disk on Hostinger. Still contract version 1.
 - 2026-11-15: clarified the signature (key, `pathAndQuery`), tiles are requested as the logged-in user, pass-through cookie and redirect rules, no inline scripts, `X-TDC-Background` (issues #6, #7, #8). Still contract version 1: no module had been built yet.
