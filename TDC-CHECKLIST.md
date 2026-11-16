@@ -1,19 +1,17 @@
 # Ryan's checklist: repos and agents
 
+*Agents: this file is for Ryan. Your instructions are in CLAUDE.md and your kickoff message.*
+
 ## Step 1 — Create the repos on GitHub (once)
 
-Go to github.com → **New repository**. For each repo:
-- Owner: **MULLET156**
-- Choose **Private**
-- Tick **Add a README file**. A repo needs at least one file before an agent can branch from it.
-- License: none for now. You can add MIT later, like opendental-claude.
+Owner **MULLET156**, with a README so the repo isn't empty. The repos are public, so they must never hold patient data or keys.
 
-- [ ] `TDC-Office-Plan`: then upload the files from this folder (Add file → Upload files → commit to `main`)
-- [ ] `TDC-Dental-Dashboard`
-- [ ] `TDC-Dental-Daysheet`
-- [ ] `TDC-Treatment-Finder`
-- [ ] `TDC-Voice-Charting`
-- [ ] `TDC-Practice-Numbers`
+- [x] `TDC-Office-Plan` (plan committed 2026-11-15)
+- [x] `TDC-Dental-Dashboard`
+- [x] `TDC-Dental-Daysheet`
+- [x] `TDC-Treatment-Finder`
+- [x] `TDC-Voice-Charting`
+- [x] `TDC-Practice-Numbers`
 - [ ] `TDC-Office-Installer` (can wait until phase 5)
 
 `opendental-claude` already exists.
