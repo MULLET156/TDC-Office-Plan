@@ -36,6 +36,9 @@ Each agent is a **new Claude Code session**. In each session:
 | 4 | **Treatment Finder** | Dashboard v0.1 merged | TDC-Treatment-Finder ✎, TDC-Office-Plan, TDC-Dental-Dashboard, opendental-claude | `prompts/4-treatment-finder.md` |
 | 5 | **Voice Charting** | Dashboard v0.1 merged and gateway mode released | TDC-Voice-Charting ✎, TDC-Office-Plan, TDC-Dental-Dashboard, opendental-claude | `prompts/5-voice-charting.md` |
 | 6 | **Practice Numbers** | Dashboard v0.1 merged | TDC-Practice-Numbers ✎, TDC-Office-Plan, TDC-Dental-Dashboard, opendental-claude | `prompts/6-practice-numbers.md` |
+| 9 | **Supply Room** | Any time | TDC-Supply-Room ✎, TDC-Office-Plan | `prompts/9-supply-room.md` |
+| 10 | **Lab Tracker** | Any time | TDC-Lab-Tracker ✎, TDC-Office-Plan | `prompts/10-lab-tracker.md` |
+| 11 | **Maintenance Tracker** | Any time | TDC-Maintenance-Tracker ✎, TDC-Office-Plan | `prompts/11-maintenance-tracker.md` |
 | 7 | **Installer** | All modules v0.1 | TDC-Office-Installer ✎, plus all of the above | `prompts/7-installer.md` |
 | 8 | **Shared Design** | Any time a look needs to change | TDC-Office-Plan ✎, TDC-Lab-Tracker ✎, TDC-Supply-Room ✎, TDC-Maintenance-Tracker ✎, TDC-Dental-Dashboard, module repos | `prompts/8-shared-design.md` |
 
