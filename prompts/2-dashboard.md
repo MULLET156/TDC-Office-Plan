@@ -7,7 +7,7 @@ Paste everything below the line into a new Claude Code session with these repos 
 You are the **Dental Dashboard agent** for Toledo Dental Care's TDC Office suite. Your repo is **MULLET156/TDC-Dental-Dashboard**.
 
 Before anything else:
-1. Read TDC-Office-Plan in full: README.md, PLAN.md, CONTRACT.md, SITE-OUTLINE.md, STATUS.md. Follow CONTRACT.md exactly. If it needs to change, open an issue in TDC-Office-Plan titled "Contract change: ..." and ask me. Don't work around it.
+1. Read TDC-Office-Plan in full: README.md, PLAN.md, CONTRACT.md, DESIGN.md, SITE-OUTLINE.md, STATUS.md. Build every page to DESIGN.md and compare it with the pictures in brand/reference/. Follow CONTRACT.md exactly. If it needs to change, open an issue in TDC-Office-Plan titled "Contract change: ..." and ask me. Don't work around it.
 2. Pull the latest main of your repo and check its open PRs and branches, so you don't overwrite newer work.
 3. Work on a new branch and open a pull request. Never push to main.
 
@@ -28,7 +28,7 @@ First version (v0.1):
 - Module base URLs are set in Settings: HTTPS subdomains in the design stage, 127.0.0.1 ports in the live stage.
 - The signed pass-through /m/<id>/... exactly per CONTRACT.md, including large audio uploads.
 - Reading module manifests, the tile grid, and /api/nav and /api/me. If a module is down, its tiles show "Not responding".
-- /shared/tdc.css and /shared/shell.js (header, nav, icons). Make it clean and touch-friendly, and use Toledo Dental Care's name and the logos in TDC-Office-Plan/brand/ (copy them into the Dashboard and serve them under /shared/). If they aren't there yet, use a text logo and ask me.
+- /shared/tdc.css and /shared/shell.js (header, nav, icons), built exactly to DESIGN.md: tokens, per-module accents, header layout, status tiles, rows, phone bottom bar with More. Copy the logos and fonts in TDC-Office-Plan/brand/ into the Dashboard and serve them under /shared/ (fonts under /shared/fonts/; never from Google).
 - A small built-in **sample module** (examples/hello-module/) that follows the contract and shows the other agents exactly how to verify the signature, serve a manifest and a tile, and use the shared look. Also a module **contract checker** script (`node scripts/check-module.js http://127.0.0.1:3101`) that other agents run to confirm their module is compliant.
 - Tests for login, sessions, the signature, the pass-through, and header stripping.
 

@@ -37,6 +37,7 @@ Each agent is a **new Claude Code session**. In each session:
 | 5 | **Voice Charting** | Dashboard v0.1 merged and gateway mode released | TDC-Voice-Charting ✎, TDC-Office-Plan, TDC-Dental-Dashboard, opendental-claude | `prompts/5-voice-charting.md` |
 | 6 | **Practice Numbers** | Dashboard v0.1 merged | TDC-Practice-Numbers ✎, TDC-Office-Plan, TDC-Dental-Dashboard, opendental-claude | `prompts/6-practice-numbers.md` |
 | 7 | **Installer** | All modules v0.1 | TDC-Office-Installer ✎, plus all of the above | `prompts/7-installer.md` |
+| 8 | **Shared Design** | Any time a look needs to change | TDC-Office-Plan ✎, TDC-Lab-Tracker ✎, TDC-Supply-Room ✎, TDC-Maintenance-Tracker ✎, TDC-Dental-Dashboard, module repos | `prompts/8-shared-design.md` |
 
 The other repos are attached **read-only** so the agent can look at them. Agents change only their own repo. If you can attach those repos with read access only, do that.
 
