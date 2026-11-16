@@ -13,4 +13,5 @@ Each agent updates **only its own row**, in the same PR as its work. Ryan update
 | Treatment Finder | TDC-Treatment-Finder | 2 | Not started | Dashboard v0.1, reports | — |
 | Voice Charting | TDC-Voice-Charting | 3 | Not started | Dashboard v0.1, gateway mode | — |
 | Practice Numbers | TDC-Practice-Numbers | 4 | Not started | Dashboard v0.1 | — |
+| Supply Room | TDC-Supply-Room (standalone PHP, Hostinger) | — | Live and in daily use. Proposed Dashboard tiles (To order, Waiting to arrive) in #23. | Ryan: OK on #23 | 2026-11-16 |
 | Installer | TDC-Office-Installer | 5 | Not started | All modules v0.1 | — |
