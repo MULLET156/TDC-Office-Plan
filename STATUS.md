@@ -6,7 +6,7 @@ Each agent updates **only its own row**, in the same PR as its work. Ryan update
 |---|---|---|---|---|---|
 | Plan | TDC-Office-Plan | 0 | Plan merged | — | 2026-11-15 |
 | Connector and Gateway | opendental-claude | 1 | Gateway mode for `core/`, dev gateway with fake data, first reports | PR #1 and PR #2 live test | 0.6.0 |
-| Dental Dashboard | TDC-Dental-Dashboard | 1 | v0.1 merged: login, roles, settings, tiles, signed pass-through, shared look, hello sample module, contract checker (`scripts/check-module.js`), Let's Encrypt DNS-01 client. Module agents can start. | Hostinger app (Ryan's OK to create the site); contract questions #6, #7, #8 | 0.1.0 |
+| Dental Dashboard | TDC-Dental-Dashboard | 1 | v0.1 merged: login, roles, settings, tiles, signed pass-through, shared look, hello sample module, contract checker (`scripts/check-module.js`), Let's Encrypt DNS-01 client. Module agents can start. | Contract questions #6, #7, #8. Design-stage site: https://palevioletred-viper-775768.hostingersite.com (auto-deploys from main) | 0.1.0 |
 | Dental Daysheet | TDC-Dental-Daysheet | 2 | Not started | Dashboard v0.1, reports | — |
 | Treatment Finder | TDC-Treatment-Finder | 2 | Not started | Dashboard v0.1, reports | — |
 | Voice Charting | TDC-Voice-Charting | 3 | Not started | Dashboard v0.1, gateway mode | — |
