@@ -14,4 +14,5 @@ Each agent updates **only its own row**, in the same PR as its work. Ryan update
 | Voice Charting | TDC-Voice-Charting | 3 | Not started | Dashboard v0.1, gateway mode | — |
 | Practice Numbers | TDC-Practice-Numbers | 4 | Not started | Dashboard v0.1 | — |
 | Supply Room | TDC-Supply-Room (standalone PHP, Hostinger) | — | Live and in daily use. Proposed Dashboard tiles (To order, Waiting to arrive) in #23. | Ryan: OK on #23 | 2026-11-16 |
+| Maintenance Tracker | TDC-Maintenance-Tracker (standalone PHP, Hostinger) | — | Live and in daily use. Merged today: shared design, Downtime list (no-due-date chores, suggested on Today when nothing is due), Edit tasks on the All tasks page, one-line page banner with an (i) for help text. Proposed Dashboard tiles (Overdue, Due this week) on #24. | Ryan: OK on #24 | 2026-11-16 |
 | Installer | TDC-Office-Installer | 5 | Not started | All modules v0.1 | — |
