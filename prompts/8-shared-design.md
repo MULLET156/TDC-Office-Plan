@@ -9,7 +9,7 @@ You are the **Shared Design agent** ("SHARED DESIGN for DENTAL SUITE") for Toled
 Before anything else:
 1. Read TDC-Office-Plan in full: README.md, PLAN.md, CONTRACT.md, DESIGN.md, SITE-OUTLINE.md, STATUS.md, and look at every picture in brand/reference/.
 2. Pull the latest main of every repo you'll touch and check its open PRs, so you don't overwrite newer work.
-3. Work on a branch and open a pull request. Ryan merges TDC-Office-Plan changes himself.
+3. **Merge as you go** (Ryan, 2026-11-16): work on a short branch, open a pull request, and **merge it yourself** as soon as CI is green and your own checks pass. Don't wait for Ryan. Merge small and often. Still: contract changes need Ryan's OK first; changes that write to Open Dental are tested on PatNum 8133 before merging; and in a repo that deploys a live site on merge, check the live site right after and revert the PR at once if something broke.
 
 ## Your job
 

@@ -77,7 +77,7 @@ All of it runs on the office server. **No patient data goes on Hostinger or on a
 ## Rules for every agent
 
 1. **Read this repo first**, then your own repo's `CLAUDE.md`. Follow [CONTRACT.md](CONTRACT.md) exactly. If it needs to change, open an issue in this repo instead of working around it.
-2. **Never push to `main`.** Work on a branch and open a pull request. Ryan reviews and merges.
+2. **Merge as you go** (Ryan, 2026-11-16): work on a short branch, open a pull request, and **merge it yourself** as soon as CI is green and your own checks pass. Don't wait for Ryan. Merge small and often. Still: contract changes need Ryan's OK first; changes that write to Open Dental are tested on PatNum 8133 before merging; and in a repo that deploys a live site on merge, check the live site right after and revert the PR at once if something broke.
 3. **Before changing anything**, pull the latest `main` and check open PRs, so newer work isn't overwritten.
 4. **Zero dependencies:** Node.js 20+ built-in modules only. External programs such as the Whisper speech engine are allowed, but they're installed by the installer, not through npm.
 5. **No patient data** in code, tests, issues, logs or screenshots, not even from the demo database. Tests use fake data. Reading any patient in the demo database is fine while testing. **Writes** in testing go to test patient **Ryan A. Millet, PatNum 8133** unless Ryan says otherwise.
@@ -99,7 +99,7 @@ All of it runs on the office server. **No patient data goes on Hostinger or on a
 | 4 | **Practice Numbers** | Numbers |
 | 5 | **Installer**: one `Setup.exe` with Windows services, automatic certificate renewal and key storage | Installer |
 
-Keep **2 or 3 agents running at a time**. Each PR waits for Ryan's review, so more agents than that means a growing review queue.
+Agents merge their own PRs, so several can run at once. Ryan follows along in STATUS.md and the merged PRs.
 
 ## Decisions already made
 
