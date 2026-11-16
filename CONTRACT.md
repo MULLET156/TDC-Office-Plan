@@ -112,6 +112,27 @@ Each module serves `GET /manifest.json`:
 - Tiles must answer within 3 seconds. Cache them if needed (per user, if the tile depends on who is asking).
 - Patient names are allowed on tiles, since the site is office-only. Never include phone numbers, birthdates or SSNs.
 
+
+## 5b. Tiles from standalone apps
+
+The standalone PHP apps (Lab Tracker, Supply Room, Maintenance Tracker; PLAN.md "Standalone apps") run on their own sites with their own logins, not behind the Dashboard. They serve tiles this way instead of §5's pass-through (Ryan, 2026-11-16, issue #23).
+
+- **Address:** `GET https://<app site>/tdc/tiles/<id>`. The answer is §5's tile JSON (`title`, `value`, `status`, `items`, `link`, `updated`).
+- **Full links:** `link` and every `items[].href` are full `https://` URLs into the app. The Dashboard opens them as they are; staff sign in to that app as usual.
+- **Server to server only:** the Dashboard calls from its server, never from the browser, with `Authorization: Bearer <TILE_TOKEN>`.
+- **The token:** each app has its own `TILE_TOKEN` (at least 32 random bytes, hex), kept in the app's server-side config and in the Dashboard's settings, never in a repo, log or chat. The app compares it in constant time (`hash_equals`).
+- **Answers:** `401` for a missing or wrong token. `404` when the app has no `TILE_TOKEN` set (tiles turned off). `429` when rate-limited (about 60 requests a minute per app). Every answer has `Cache-Control: no-store`. Answer within 3 seconds; the app may cache its own counts for up to a minute.
+- **Content:** counts and short labels. **No patient names** on any standalone tile (they run on Hostinger, which has no BAA), and no phone numbers, birthdates, prices or notes. An app may leave `items` empty.
+- **Logs:** nothing logged except the tile id and the status code.
+- **Who sees it:** the tile is the same for every user, since the app doesn't know who is asking. The Dashboard decides which roles see it. Standalone apps have no manifest (§4), so the Dashboard keeps a list in its own settings: app name, base URL, tile ids, roles, accent and token.
+- **Not responding:** as DESIGN.md says, the tile shows "Not responding" and the rest of the page keeps working.
+
+| App | Tile ids |
+|---|---|
+| Lab Tracker | `due-week`, `late`, `to-check` |
+| Supply Room | `to-order`, `waiting` |
+| Maintenance Tracker | `overdue`, `due-week` |
+
 ## 6. Shared look
 
 The Dashboard serves the shared pieces, and every module page includes them:
@@ -159,6 +180,7 @@ The Dashboard serves the shared pieces, and every module page includes them:
 
 ## Changes
 
+- 2026-11-16: new §5b, tiles from the standalone apps (Lab Tracker, Supply Room, Maintenance Tracker): `/tdc/tiles/<id>`, Bearer `TILE_TOKEN`, full links, counts and short labels, no patient names (issue #23, approved by Ryan). Still contract version 1: additive.
 - 2026-11-16: §6 now points to DESIGN.md, the shared design Ryan approved (warm base from the logo, one accent per module, Archivo/Figtree/JetBrains Mono served by the Dashboard, new list classes, phone layout). Still contract version 1: additive for modules.
 - 2026-11-16: the design stage uses Ryan's Open Dental **demo database** through the office gateway and a secure tunnel. The stage guard is now the gateway's `"stage"` (`design`/`live`) instead of `"fake": true`. No Open Dental data on disk on Hostinger. Still contract version 1.
 - 2026-11-15: clarified the signature (key, `pathAndQuery`), tiles are requested as the logged-in user, pass-through cookie and redirect rules, no inline scripts, `X-TDC-Background` (issues #6, #7, #8). Still contract version 1: no module had been built yet.
