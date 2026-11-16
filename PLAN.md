@@ -47,6 +47,13 @@ The local *demo gateway* (fake data, `npm run dev` in opendental-claude) is stil
 
 The same code runs in both stages. Only the settings change (see CONTRACT.md §1). Moving to live means installing the same repos on the office server. The Dental Dashboard and Practice Numbers (totals only) could stay on Hostinger later, but that's decided when we go live.
 
+## Standalone apps
+
+The **Lab Tracker**, **Supply Room** and **Maintenance Tracker** are working PHP apps on Hostinger, already on the shared design (DESIGN.md). They are **not** converted into Node.js modules now. Each has its own agent (`prompts/9`, `10`, `11`).
+- **Now:** the Dashboard links to them, and each serves a couple of Dashboard tiles (once Ryan approves that contract change).
+- **Supply Room and Maintenance Tracker** hold no patient data, so they can stay on Hostinger for good. Converting them is optional, for example later for one login across the suite.
+- **Lab Tracker** holds real patient information, so it is the **first one to convert**: a module on the office server, reading lab cases from Open Dental. That happens after the Daysheet and Treatment Finder modules work, and before the suite goes live. Until then it adds no new patient fields and shows the minimum.
+
 ## How it fits together (live stage)
 
 ```
