@@ -44,7 +44,7 @@ Each agent is a **new Claude Code session**. In each session:
 
 The other repos are attached **read-only** so the agent can look at them. Agents change only their own repo. If you can attach those repos with read access only, do that.
 
-Keep **2 or 3 agents running at once**. Every PR needs your review.
+Agents merge their own pull requests as they go, so you don't need to review each one. Watch STATUS.md, and try the sites.
 
 ## Step 3 — For each PR an agent opens
 

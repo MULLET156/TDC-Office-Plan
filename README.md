@@ -13,4 +13,4 @@ This repo is the **big plan** for Toledo Dental Care's office web apps. Every ag
 | [TDC-CHECKLIST.md](TDC-CHECKLIST.md) | Ryan's checklist: repos to create, agents to start, in what order |
 | [prompts/](prompts/) | The kickoff message to paste into each agent |
 
-**Only Ryan merges changes to this repo.** Agents propose changes by pull request, or by opening an issue titled `Contract change: ...`.
+Agents change this repo by pull request and merge it themselves (their own STATUS row, or what Ryan asked for). **Contract and design changes** need Ryan's OK first: open an issue titled `Contract change: ...`.
