@@ -226,6 +226,7 @@ They cover: the self-hosted fonts, group headings with the fold arrow, touch siz
 
 - **Never edit an app's copy.** Change the file here (Shared Design agent or Ryan), then copy it into every app the same evening.
 - Each app runs a **design check** on every pull request and push (`.github/workflows/design-check.yml`): it fails when the app's copy differs from this repo's, or when the app loads fonts from an outside site. To fix it, copy `brand/tdc-shared.css` and `brand/tdc-shared.js` from here into the app.
+- After the file changes here, wait about 5 minutes before opening the app pull requests: GitHub serves the new copy to the Design check a few minutes late. If a check fails only for that reason, re-run it.
 - A weekly scheduled design check (Shared Design agent) reads all the repos, compares them with this file, and opens an issue for anything that has drifted.
 - The Dashboard's `/shared/tdc.css` follows the same rules; it may `@import` this file.
 
