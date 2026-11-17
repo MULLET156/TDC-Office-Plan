@@ -31,15 +31,17 @@ One warm, quiet base taken from the Toledo Dental Care logo, the same building b
 
 ### Status (the same meaning in every app)
 
-| Token | Light text / soft background | Means |
-|---|---|---|
-| `--tdc-alert` / `--tdc-alert-soft` | `#B3261E` / `#F9DEDB` | 911, overdue, late, out of stock |
-| `--tdc-911` | `#C62828` (white text) | The solid **911** chip only |
-| `--tdc-warn` / `--tdc-warn-soft` | `#8A4B00` / `#FBEAD2` | Due soon, on hold, needs a date, expiring |
-| `--tdc-low` | `#F2C12E` | Stripe and bar fill for "below reserve" (never text) |
-| `--tdc-ok` / `--tdc-ok-soft` | `#2D7A3A` / `#DCEFDF` | Done, ready, stocked, completed |
-| `--tdc-new` / `--tdc-new-soft` | `#56696E` / `#E9EEEF` | Not started, never logged |
-| `--tdc-info` / `--tdc-info-soft` | `#2F557F` / `#E0E8F2` | Sent out, on the way, informational |
+| Token | Light colour / soft | Dark colour / soft | Means |
+|---|---|---|---|
+| `--tdc-alert` / `--tdc-alert-soft` | `#B3261E` / `#F9DEDB` | `#E98680` / `#413336` | 911, overdue, late, out of stock |
+| `--tdc-911` | `#C62828` (white text) | `#C62828` (white text) | The solid **911** chip only |
+| `--tdc-warn` / `--tdc-warn-soft` | `#8A4B00` / `#FBEAD2` | `#F58500` / `#403522` | Due soon, on hold, needs a date, expiring |
+| `--tdc-low` | `#F2C12E` | `#F2C12E` | Stripe and bar fill for "below reserve" (never text) |
+| `--tdc-ok` / `--tdc-ok-soft` | `#2C7638` / `#DCEFDF` | `#47BB5B` / `#204032` | Done, ready, stocked, completed |
+| `--tdc-new` / `--tdc-new-soft` | `#56696E` / `#E9EEEF` | `#96A9AD` / `#2E3C42` | Not started, never logged |
+| `--tdc-info` / `--tdc-info-soft` | `#2F557F` / `#E0E8F2` | `#84AAD1` / `#293C4A` | Sent out, on the way, informational |
+
+Every text/background pair above is at least 4.5:1. In dark mode, text on a solid status or accent fill is dark (`#11191C`) instead of white.
 
 Never use colour alone: every status also has a word or an icon (the "911" chip, "Overdue", a check mark).
 
@@ -49,16 +51,18 @@ The accent is the app's main colour: the "+ New" button, focus rings, and the de
 
 **Page colour.** The line under the header and the page banner take the colour of the page you're on: the selected status tile's colour (Overdue = red, Due soon = amber, Ready = green …), or the colour of the header button that opened the page (All cases = navy, Setup = grey). The app's home page uses its accent. This is the same in every app. A module sets it once: `<body data-module="daysheet">` and `tdc.css` picks the accent.
 
-| App | Accent | Soft | Notes |
-|---|---|---|---|
-| Dental Dashboard | `#23333D` | `#E1E6EA` | Logo navy |
-| Maintenance Tracker | `#0E6B73` | `#DCEFEF` | Teal |
-| Lab Tracker | `#4E5833` | `#E5E9D8` | Olive |
-| Supply Room | `#1C3466` | `#DFE6F4` | Navy |
-| Dental Daysheet | `#2B5FAE` | `#E0E9F7` | Blue |
-| Treatment Finder | `#6A3FC4` | `#EFE8FC` | Violet |
-| Voice Charting | `#A02A72` | `#F9E3F0` | Magenta |
-| Practice Numbers | `#7A4E1C` | `#F5E9DA` | Bronze |
+| App | Accent / soft (light) | Accent / soft (dark) | Dark text colour | Notes |
+|---|---|---|---|---|
+| Dental Dashboard | `#23333D` / `#E1E6EA` | `#93B4FF` / `#2E3E50` | same | Logo navy |
+| Maintenance Tracker | `#0E6B73` / `#DCEFEF` | `#149AA5` / `#173940` | `#17AFBC` | Teal |
+| Lab Tracker | `#4E5833` / `#E5E9D8` | `#A8B680` / `#323E39` | same | Olive |
+| Supply Room | `#1C3466` / `#DFE6F4` | `#698CD6` / `#273749` | `#85A1DE` | Navy |
+| Dental Daysheet | `#2B5FAE` / `#E0E9F7` | `#5A8BD6` / `#243749` | `#7BA2DE` | Blue |
+| Treatment Finder | `#6A3FC4` / `#EFE8FC` | `#9A7DD7` / `#2F3449` | `#AC94DE` | Violet |
+| Voice Charting | `#A02A72` / `#F9E3F0` | `#D664AA` / `#3A3041` | `#DD80B9` | Magenta |
+| Practice Numbers | `#7A4E1C` / `#F5E9DA` | `#C17B2C` / `#36342A` | `#D48F42` | Bronze |
+
+In dark mode the accent is used for borders, stripes and fills; where a "dark text colour" is given, use it for accent-coloured text.
 
 A new module gets a new accent here before it ships (ask the Shared Design agent). White text on every accent is at least 4.5:1.
 
@@ -66,15 +70,15 @@ A new module gets a new accent here before it ships (ask the Shared Design agent
 
 Header buttons are tinted (soft background, coloured border and text). The **same kind of button has the same colour in every app**:
 
-| Kind | Colour | Examples |
-|---|---|---|
-| Lists / browse | Navy `#1C3466` | All tasks, All cases, Saved lists |
-| New | The app's accent | + New task, + New case, + New product |
-| Log / history | Olive `#4E5833` | Log, History, My dictations |
-| Setup / settings | Grey `#46575B` | Setup, Settings |
-| Money | Green `#1E7A3C` | Spending, Production |
-| Warning | Amber `#8A4B00` | Expiring (with a count) |
-| Tool | Cyan `#0891B2` | Editor |
+| Kind | Colour (light) | Colour (dark) | Examples |
+|---|---|---|---|
+| Lists / browse | Navy `#1C3466` | `#85A1DE` | All tasks, All cases, Saved lists |
+| New | The app's accent | the app's dark accent | + New task, + New case, + New product |
+| Log / history | Olive `#4E5833` | `#99AA6B` | Log, History, My dictations |
+| Setup / settings | Grey `#46575B` | `#90A5AA` | Setup, Settings |
+| Money | Green `#1E7A3C` | `#2EBB5C` | Spending, Production |
+| Warning | Amber `#8A4B00` | `#F08200` | Expiring (with a count) |
+| Tool | Cyan: text `#067590`, border and fill `#077D9A` | `#0AB1D9` | Editor |
 
 The current page's button is filled solid in its colour with white text.
 
@@ -131,7 +135,7 @@ Phone (640px and down):
 | search box ............................................ | Filters |
 ```
 
-Everything else from the header (Apps, Log, Setup, sound, theme, Log out) moves into the **More** tab of the bottom bar.
+Everything else from the header (Apps, Log, Setup, sound, theme, Log out) moves into the **More** tab of the bottom bar. Tapping **initials ▾** opens the same More sheet (in the suite it also holds My account and Lock).
 
 ### Status tiles (top of a list page)
 
@@ -181,7 +185,7 @@ Keep the existing `.tdc-card`, `.tdc-tile`, `.tdc-table`, `.tdc-form` and `.tdc-
 
 ## 6. Dark mode
 
-Every page follows the device setting and has a theme button. Use the dark column of §2, the `-dark` logo files, and keep the same accents (lighten an accent only if it falls below 4.5:1 on `--tdc-surface`).
+Every page follows the device setting and has a theme button. Use the dark columns of §2 and the `-dark` logo files. Dark accents keep each app's hue, only lighter, so text reaches 4.5:1.
 
 ## 7. Words
 
@@ -215,6 +219,7 @@ Modules use these instead of writing their own:
 
 ## Changes
 
+- 2026-11-16 (issue #18): done-green is `#2C7638` and Tool cyan `#067590`/`#077D9A` so text passes 4.5:1; dark-mode values for status colours, accents and header buttons; phone "initials ▾" opens the More sheet. Lab Tracker, Supply Room and Maintenance Tracker use the new light values.
 - 2026-11-16: page banners get an (i) info button that shows and hides the page's help line (from the Maintenance Tracker), now in all three apps.
 - 2026-11-16: the line under the header and the page banner follow the current page's colour; exactly one 4px line; plain page background (no tint). Search boxes and filter dropdowns use `--tdc-sunk`.
 - 2026-11-16: first version, from the shared look Ryan approved for Lab Tracker, Supply Room and Maintenance Tracker.
