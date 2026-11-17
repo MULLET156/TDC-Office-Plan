@@ -166,7 +166,8 @@ A segmented control labelled **Group by** above the list (for example Due date �
 
 ### Rows (lists of tasks, cases, products, patients)
 
-- White rows inside a card with a 1px border, separated by 1px lines. Group headings are `--tdc-sunk` bars with an Archivo capital name and a count on the right.
+- White rows inside a card with a 1px border, separated by 1px lines.
+- **Group headings** sit *above* their card, on the page background (not a bar inside the card): a 12px colour dot (or the Maintenance icon chip, a supplier logo or a pin) · the NAME in Archivo capitals (19px desktop, 16px phone) · a mono count pill · a **fold arrow**. Tapping the heading folds or opens the group, and the device remembers it. Totals or tools (Order online, Quick count, Select all) go to the right of the same heading. The dot takes the group's status colour (911/overdue red, needs a date amber, ready green, later grey) or the page colour. A second level inside a card (a case type within Crown & bridge) is a small grey sub-heading row. Built by `tdc-shared.css`/`tdc-shared.js` (§9).
 - A **6px solid stripe** on the left edge in the row's status colour (red 911/overdue, amber due soon, yellow below reserve, green done/ready, grey not started). Solid, never hatched or tinted across the whole row.
 - Name in Figtree 600; under it, small **chips** (6px corners: type, tooth, lab, frequency). The solid red **911** chip marks the most urgent rows.
 - Dates and money on the right in mono, the most urgent line in red.
@@ -204,21 +205,62 @@ Modules use these instead of writing their own:
 | `.tdc-find` | Search box + filters row |
 | `.tdc-seg` | Segmented control (Group by), buttons with `aria-pressed` |
 | `.tdc-list`, `.tdc-group`, `.tdc-row[data-status]` | List card, group heading, row with status stripe |
+| `.tdc-gh` (+ `.tdc-gcount`, `.tdc-gsub`, `--gc`) | Group heading above its card, with the fold arrow (from `tdc-shared.css`, §9) |
+| `.tdc-toast`, `.tdc-scrim`, `.tdc-dialog`, `.tdc-sheet`, `.tdc-form` | Pop-up message, dimmed page, dialog box, phone bottom sheet, form area (§11) |
+| `.tdc-info`, `.tdc-compact` | Small round buttons that keep their size and get an invisible 44px tap area on touch screens |
 | `.tdc-chip`, `.tdc-chip-911` | Small labels |
 | `.tdc-meter` (`--value`, optional `--mark`) | Progress / stock bar |
 | `.tdc-hbtn[data-kind="list|new|log|setup|money|warn|tool"]` | Colour-coded header buttons. A module puts them in `<nav class="tdc-actions">` and `shell.js` moves them into the header (and into More on phones) |
 
-## 9. Checklist before a PR
+## 9. Shared files: `tdc-shared.css` and `tdc-shared.js`
+
+The pieces every app shares live in two files in [`brand/`](brand/): [`tdc-shared.css`](brand/tdc-shared.css) and [`tdc-shared.js`](brand/tdc-shared.js). Each app keeps an **exact copy** next to its `index.html`, plus the fonts in `fonts/`:
+
+```html
+<link rel="preload" href="fonts/figtree.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="tdc-shared.css">
+<script src="tdc-shared.js" defer></script>
+```
+
+They cover: the self-hosted fonts, group headings with the fold arrow, touch sizes and the iPhone fixes (§10), toasts, dialogs, form fields and printing (§11). They use the app's own colour variables, so light and dark follow the app.
+
+- **Never edit an app's copy.** Change the file here (Shared Design agent or Ryan), then copy it into every app the same evening.
+- Each app runs a **design check** on every pull request and push (`.github/workflows/design-check.yml`): it fails when the app's copy differs from this repo's, or when the app loads fonts from an outside site. To fix it, copy `brand/tdc-shared.css` and `brand/tdc-shared.js` from here into the app.
+- A weekly scheduled design check (Shared Design agent) reads all the repos, compares them with this file, and opens an issue for anything that has drifted.
+- The Dashboard's `/shared/tdc.css` follows the same rules; it may `@import` this file.
+
+## 10. Phones and tablets: iPhone, iPad, Android
+
+The office uses iPhones, iPads, Android phones and Android tablets. Design for all four:
+
+- **Touch decides, not width.** Big targets switch on with `@media (pointer:coarse)`, so an iPad in landscape (1180–1366px wide, desktop layout) still gets them. Buttons, selects and tiles are at least **44px** tall on touch screens. Small round buttons (the banner (i)) keep their look and get an invisible 44px tap area (`.tdc-info`, `.tdc-compact`).
+- **Widths to check:** 390 (iPhone), 412 (Android phone), 768–820 (iPad portrait, Android tablet portrait), 1024–1180 (iPad landscape, Android tablet landscape), 1366 (iPad Pro), plus desktop 1400. Check the tablet widths with touch on.
+- **iPhone/iPad fixes (all in `tdc-shared.css`):** text fields, selects and text areas are at least 16px on touch screens, or iOS zooms the page when one is tapped; `viewport-fit=cover` with `env(safe-area-inset-*)` padding so nothing sits under the notch or the home bar (header, bottom tab bar, sheets, toasts); `touch-action: manipulation` so taps don't wait for a double-tap zoom.
+- **Home screen:** every app has `manifest.webmanifest`, `apple-touch-icon.png` (180px), `apple-mobile-web-app-capable`, `mobile-web-app-capable` and a `theme-color` in the app's accent, so it installs as an app icon on iOS and Android.
+- **No hover-only information.** Anything shown on hover (tooltips, hidden buttons) must also be reachable by a tap.
+- Same breakpoints in every app, so a tablet in portrait looks the same in all of them.
+
+## 11. Toasts, dialogs, form fields and printing
+
+- **Toast** (`.tdc-toast`): a short dark pill at the bottom centre (ink background, page-colour text, 10px corners, Figtree 600 14px), above the phone tab bar and the iPhone home bar, gone after a few seconds. An action ("Undo") is a bold link-style button in the accent-soft colour.
+- **Dialogs** (`.tdc-scrim` + `.tdc-dialog`): dimmed page `rgba(17,25,28,.55)`; a white box with 16px corners and a 4px top edge in the page colour; title in Archivo. On phones it slides up from the bottom as a sheet (`.tdc-sheet`) with the home-bar gap below. The browser's own `confirm()` is fine for rare Setup actions (reset, new code) only.
+- **Form fields** (inside `.tdc-dialog` or `.tdc-form`): `--tdc-sunk` background, 1px `--tdc-line` border, 8px corners, at least 40px tall (44px on touch), 2px accent focus ring. Checkboxes and radios use the accent colour.
+- **Printing** (lab slips, order lists): white page, black text, no shadows, 12mm margins, group headings kept with their rows, no buttons, toasts or header line. App-specific print layouts (the lab slip) build on this.
+
+## 12. Checklist before a PR
 
 - [ ] Looks like the pictures in `brand/reference/` at 1400px, 768px and 390px.
 - [ ] Only `--tdc-*` colours and `.tdc-*` classes; no new fonts, no outside font links.
 - [ ] Status colours mean what §2 says, and each has a word or icon too.
 - [ ] App name in the shared spot; accent set by `data-module`.
-- [ ] Touch targets at least 44px on tablet and phone; text at least 4.5:1.
+- [ ] Touch targets at least 44px on touch screens (check 390, 820 and 1180 with touch on); text at least 4.5:1.
+- [ ] Text fields at least 16px on touch screens; nothing under the iPhone notch or home bar.
 - [ ] Works in dark mode.
+- [ ] `tdc-shared.css` and `tdc-shared.js` match this repo (the design check passes).
 
 ## Changes
 
+- 2026-11-16: shared files `tdc-shared.css` and `tdc-shared.js` (§9) with a design check in every app; group headings above their card with a fold arrow in all apps; touch sizes and iPhone/iPad/Android rules (§10); toasts, dialogs, form fields and printing (§11); fonts served by each app (no Google); the three apps switched to the dark-mode values of §2.
 - 2026-11-16 (issue #18): done-green is `#2C7638` and Tool cyan `#067590`/`#077D9A` so text passes 4.5:1; dark-mode values for status colours, accents and header buttons; phone "initials ▾" opens the More sheet. Lab Tracker, Supply Room and Maintenance Tracker use the new light values.
 - 2026-11-16: page banners get an (i) info button that shows and hides the page's help line (from the Maintenance Tracker), now in all three apps.
 - 2026-11-16: the line under the header and the page banner follow the current page's colour; exactly one 4px line; plain page background (no tint). Search boxes and filter dropdowns use `--tdc-sunk`.
