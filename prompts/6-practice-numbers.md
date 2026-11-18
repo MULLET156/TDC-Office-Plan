@@ -19,6 +19,20 @@ I'm not a developer: write the README and PR descriptions in plain language, Win
 
 ## Your job
 
-Module id "numbers", port 3104. Read only, owner and admin only. Build the pages in SITE-OUTLINE.md under "Practice Numbers": at a glance, production, collections, A/R. Pick a date range on every page, compare with the previous period, and show a monthly trend chart (hand-built SVG, no chart libraries). Tile: "Production MTD".
+Ryan wants this to look **slick**: it's the owner's view of how the practice is doing. Module id "numbers", port 3104. Read only, **owner and admin only**. Follow DESIGN.md closely (stat tiles, the module's accent colour, dark mode, phone layout) and look at brand/reference/ first.
 
-Use the existing reports in opendental-claude core/reports.js (production_by_provider, production_by_day, production_by_code, adjustments, writeoffs, patient and insurance payments, scheduled_production, new_patients, ar_aging, outstanding_claims). Request anything missing from the Connector. Start from the Dashboard's sample module and run check-module before your PR.
+**Pages** (SITE-OUTLINE.md, "Practice Numbers"):
+- **At a glance:** this month so far against the same days last month and last year (production, collections, adjustments and write-offs, new patients, scheduled production for the rest of the month), plus a 13-month trend chart.
+- **Production:** by provider, by day and by procedure code.
+- **Collections:** patient and insurance payments, and the collection rate (collections ÷ net production).
+- **A/R:** aging buckets (0–30, 31–60, 61–90, 90+), outstanding claims and unsent claims.
+- A date-range picker on every page (this month, last month, quarter, year to date, custom), each compared with the previous period. Numbers go up or down with a clear arrow and colour.
+- **Charts:** hand-built SVG, no chart libraries. Each chart works without hover on a tablet, has readable labels, and has a table view for the same numbers.
+
+**Tile:** "Production MTD", showing month to date against last month to date.
+
+**Reports:** use the existing reports in opendental-claude core/reports.js through your gateway key: production_by_provider, production_by_day, production_by_code, procedure_counts, adjustments_by_provider, writeoffs_by_provider, patient_payments_by_provider, insurance_payments_by_provider, scheduled_production, new_patients, ar_aging_totals, ar_aging, outstanding_claims and unsent_claims. Opendental-claude **issue #14** asks the Connector to add fake data for the ones the demo gateway doesn't answer yet, so build against the shapes in core/reports.js meanwhile, and switch to the demo gateway as each one lands.
+
+**Patient details:** the totals pages show no patients. A/R by family and the claims lists do name patients, so keep them behind a tap, never on tiles, and never cache them on disk. In the live stage those lists run only on the office server.
+
+Start from the Dashboard's sample module (examples/hello-module) and use the shared classes from /shared/. Run scripts/check-module.js before each merge. Deploy to Hostinger as its own Node.js app, then ask me (or the planning session) to add it to the Dashboard.
