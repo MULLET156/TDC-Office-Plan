@@ -19,10 +19,10 @@ https://tdc-office/
 │   └── /lists/<id>                One saved list (call status, export CSV)
 │
 ├── /m/voice/                      Voice Charting                [doctor, hygienist, assistant, owner]
-│   ├── /                          Pick patient → choose Plan or Note → mic
+│   ├── /                          Pick patient → choose Plan or Note → dictate (Wispr Flow) or type
 │   ├── /draft/<id>                Review draft → edit → Confirm / Discard
 │   ├── /history                   My recent dictations and what was written
-│   └── /settings                  Speech-to-text engine, Claude model        [owner, admin]
+│   └── /settings                  Claude model, dental word list             [owner, admin]
 │
 ├── /m/numbers/                    Practice Numbers              [owner, admin]
 │   ├── /                          This month at a glance
@@ -62,7 +62,7 @@ The **Unscheduled** page lists patients, the planned $ total and the oldest plan
 ## Voice Charting
 
 1. Pick a patient (search) and choose **Treatment plan** or **Note** (progress or group note).
-2. Hold or tap the **mic**. A live timer and level meter show while recording. Tap again to stop.
+2. Dictate into the large text box with **Wispr Flow** (or type), then tap **Draft**. Claude turns the dictation into a draft.
 3. **Draft** screen:
    - For a plan: each line shows code, tooth/surfaces, priority/phase and fee estimate, and can be edited or removed.
    - For a note: the note text can be edited.

@@ -19,12 +19,18 @@ I'm not a developer: write the README and PR descriptions in plain language, Win
 
 ## Your job
 
-Module id "voice", port 3103, plus a speech engine on 127.0.0.1:3110. This is the only module that writes to Open Dental, so safety comes first.
+Module id "voice", port 3103. This is the only module that writes to Open Dental, so safety comes first.
 
-Flow (see SITE-OUTLINE.md): pick a patient, choose Plan or Note, record in the browser (MediaRecorder; never the Web Speech API), upload the audio to this module, transcribe, have Claude draft, the user reviews and edits, the user taps Confirm, then write and read back. Never sign.
+**Dictation (Ryan, 2026-11-19): use Wispr Flow, not our own speech-to-text.** Staff dictate with the **Wispr Flow** app (Windows, Mac, iOS, Android), which types into whatever text box has focus. Flow handles the speech-to-text; this module turns the text into a draft. The practice signs Wispr Flow's **HIPAA BAA**, which locks Privacy Mode (zero data retention) on. That's Ryan's job, not yours. Don't build audio recording, upload or a Whisper engine in version 1.
 
-- **Design stage:** Hostinger can't run Whisper, so include a "type instead of speak" option and a speech engine setting that can point at Whisper on a test PC. Fake dictations only.
-- **Speech-to-text:** a switchable engine. Build local Whisper first: whisper.cpp's server program on 127.0.0.1:3110. Write a plain-language Windows setup and suggest a model size based on the server specs (ask me for them). Add a cloud option (AWS Transcribe Medical or Azure) behind a setting that stays off until I confirm a BAA. Delete audio after transcription and never log transcripts.
+Flow (see SITE-OUTLINE.md): pick a patient, choose Plan or Note, dictate (or type) into a **large text box**, tap **Draft**, Claude drafts, the user reviews and edits, the user taps Confirm, then write and read back. Never sign.
+
+- **The dictation box:** large and touch-friendly, focused automatically when the page opens so Flow types straight into it. It also works with plain typing, because Flow is optional on any device. Show a short hint ("Tap here and dictate with Wispr Flow, or type"). Keep the text in the page only until Draft or Discard. Never save or log it beyond the draft that waits for Confirm, and delete the draft after Confirm or Discard.
+- **Dental words:** Claude must handle dictation as people speak it: "crown on thirty", "MOD composite on three", "bitewings", "phase two", tooth numbers as words, surfaces as letters. Add a short list of words to put in Flow's dictionary (for example MOD, DO, BWX, FMX, the implant brands the practice uses) to the README for Ryan.
+- **Never** use the browser's built-in Web Speech API: Chrome sends that audio to Google with no BAA.
+
+- **Later, not now:** a built-in mic button with local Whisper (whisper.cpp on the office server, 127.0.0.1:3110) for devices without Flow. Keep the code ready for a second way to get text in, but don't build it until Ryan asks.
+- **Design stage:** test with made-up dictations about demo-database patients. Writes go to PatNum 8133 only.
 - **Claude:** call the Anthropic Messages API with plain fetch and my key from .env. Give Claude only read and drafting tools (patient lookup, procedure code lookup, current chart and treatment plans, priorities list) and have it return a structured draft. Write tools are never exposed to Claude. Your server runs the existing core/ clinical tools (od_plan_procedure, od_create_treatment_plan, od_set_treatment_plan_priorities, od_add_group_note, progress notes and so on) only after Confirm, as the confirming user, and records who dictated and who confirmed. Priority is sent as a definition number, not text.
 - Only doctor, hygienist and owner can Confirm; an assistant can create drafts. Tiles: "My drafts waiting" and "Unsigned notes".
 - Build with the local demo gateway (fake data), then test against the office gateway (demo database), with writes to PatNum 8133 only.

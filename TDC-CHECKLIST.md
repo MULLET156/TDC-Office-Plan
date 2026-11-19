@@ -58,7 +58,7 @@ Agents merge their own pull requests as they go, so you don't need to review eac
 
 - [ ] Merge opendental-claude PR #1 and PR #2 after your live test. The Connector agent builds on them.
 - [ ] Confirm a BAA with Anthropic for the API (needed before Voice Charting touches real patients).
-- [ ] Check the office server specs (CPU, RAM, GPU) for Whisper.
+- [ ] **Wispr Flow:** sign its HIPAA BAA before dictating anything about real patients (desktop app → Settings → Data & Privacy, or in the iOS app). For the Android tablets, use a Wispr Flow team account with the BAA signed by the admin, because Android can't sign one itself. Turn off any screenshot or "context" feature you don't need, and add your dental words to Flow's dictionary.
 - [ ] Decide which procedure codes count as "hygiene".
 - [ ] Confirm the roles table in `SITE-OUTLINE.md`.
 - [ ] Choose the web address (for example office.toledodentalcare.com) and give the Dashboard agent access to set up its DNS records when it asks. Your domain is currently with GoDaddy.
