@@ -13,7 +13,7 @@ The practice runs **Open Dental 26.2.40**. Every module reaches Open Dental only
 | Dental Dashboard | `MULLET156/TDC-Dental-Dashboard` | Front door: login, staff and roles, the shared header and look, home screen tiles, links to other apps. Passes requests to the modules. | **None.** It never calls Open Dental. |
 | Dental Daysheet | `MULLET156/TDC-Dental-Daysheet` | Today's patients, with planned treatment that isn't scheduled, x-ray history and frequency limits, and lab cases due before their seat date. | Read only |
 | Treatment Finder | `MULLET156/TDC-Treatment-Finder` | Filter patients to find work to schedule: planned treatment, no future appointment, insurance benefits remaining, x-rays due, and so on. Save or export lists. | Read only |
-| Voice Charting | `MULLET156/TDC-Voice-Charting` | Speak, then review a draft treatment plan or note, then Confirm to write it to Open Dental. Includes the speech-to-text service. | **Read and write** (chart only, never signs) |
+| Voice Charting | `MULLET156/TDC-Voice-Charting` | Dictate (with Wispr Flow) or type, then review a draft treatment plan or note, then Confirm to write it to Open Dental. | **Read and write** (chart only, never signs) |
 | Practice Numbers | `MULLET156/TDC-Practice-Numbers` | Production, collections, A/R, new patients, trends. Owner and admin only. | Read only |
 | Connector and Gateway | `MULLET156/opendental-claude` (exists) | Shared Open Dental code (`core/`), the gateway, and **all reports**. | Owns it |
 | Shared Design | TDC-Office-Plan (DESIGN.md, `brand/`) | Keeps every page in one look: DESIGN.md, logos, fonts, reference pictures; keeps Lab Tracker, Supply Room and Maintenance Tracker in line; reviews the Dashboard's shared look and module pages. | None |
@@ -65,7 +65,7 @@ The **Lab Tracker**, **Supply Room** and **Maintenance Tracker** are working PHP
  └──┬──────┬──────┬──────┬─┘  passes /m/<module>/... to modules (signed, see CONTRACT.md)
     ▼      ▼      ▼      ▼
  Daysheet Finder Voice  Numbers     each on 127.0.0.1 only
-  :3101   :3102  :3103   :3104      (Voice also uses Speech :3110)
+  :3101   :3102  :3103   :3104
     └──────┴──────┴──────┘
         │  own Bearer key per module
         ▼
@@ -95,7 +95,7 @@ All of it runs on the office server. **No patient data goes on Hostinger or on a
 | 0 | Ryan creates the repos and merges this plan | — |
 | 1 | **Dashboard:** login, roles, header, tiles, signed pass-through, plus a built-in "hello" sample module. **Connector:** gateway mode for `core/`, a fake-data dev gateway, and the first reports. | Dashboard, Connector |
 | 2 | **Daysheet**, then **Treatment Finder** (they share reports) | Daysheet, Finder, Connector |
-| 3 | **Voice Charting** with local Whisper (cloud speech-to-text as an option, off until there's a BAA) | Voice, Connector |
+| 3 | **Voice Charting**, with dictation by Wispr Flow (local Whisper later, if needed) | Voice, Connector |
 | 4 | **Practice Numbers** | Numbers |
 | 5 | **Installer**: one `Setup.exe` with Windows services, automatic certificate renewal and key storage | Installer |
 
@@ -107,7 +107,7 @@ Agents merge their own PRs, so several can run at once. Ryan follows along in ST
 - **Fully web-based for staff: nothing is installed on any office PC or tablet.** Staff open a link (for example `https://office.toledodentalcare.com`) in Chrome or Edge and log in with their password. No certificate to trust, no per-device setup.
 - The only install is on the **office server**, done once by the Installer.
 - Hosted in the office, on the same server as the gateway. HTTPS is required (browsers only allow the microphone on secure pages). It uses a **real, publicly trusted certificate** (Let's Encrypt, free) for a name under the practice's own domain, proven by DNS, so the server never has to be open to the internet. The name points to the server's office-network address, so it only works inside the office.
-- Speech-to-text: build a switch with two options. **Local Whisper** is built first. A **cloud service under a BAA** (AWS Transcribe Medical or Azure) is off until there's a BAA. **Never** use the browser's built-in Web Speech API.
+- **Speech-to-text: Wispr Flow** (Ryan, 2026-11-19). Staff dictate with the Wispr Flow app into Voice Charting's text box. The practice signs Wispr Flow's HIPAA BAA, which locks zero data retention on: individuals sign in the desktop or iOS app, and Android tablets need an organization (team) account with the admin-signed BAA. Flow is optional on any device (typing works too). A built-in mic with local Whisper on the office server is a later option. **Never** the browser's built-in Web Speech API (Chrome sends audio to Google with no BAA).
 - Claude is called through the Anthropic API with Ryan's own key, with plain `fetch` and no SDK. Ryan must confirm a BAA with Anthropic before the app is used on real patients.
 - Staff log in individually, so the audit trail shows who dictated and who confirmed each change.
 - Devices: Windows PCs in operatories, front-desk PCs, Android tablets.
@@ -118,5 +118,4 @@ Agents merge their own PRs, so several can run at once. Ryan follows along in ST
 
 - [ ] Exact list of procedure codes that count as "hygiene".
 - [ ] Which roles see which modules (draft in SITE-OUTLINE.md).
-- [ ] Office server specs (CPU, RAM, GPU), to choose the Whisper model size.
 - [ ] Anthropic BAA confirmed.
