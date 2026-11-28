@@ -16,10 +16,11 @@ Owner **MULLET156**, with a README so the repo isn't empty. The repos are public
 
 `opendental-claude` already exists.
 
-## Step 1b — Hostinger (design stage)
+## Step 1b — The office server (TrueNAS)
 
-- [ ] Check that your Hostinger plan can run **Node.js apps**. Business and Cloud plans can. Each module becomes its own app on its own subdomain; the agents will tell you the subdomain names when they're ready to deploy.
-- [ ] Only fake data ever goes on Hostinger.
+- [ ] Set up the gateway on TrueNAS (opendental-claude docs/truenas.md). The Dashboard and modules go on the same box, as their agents get them ready.
+- [ ] Later, for use outside the office: move toledodentalcare.com's DNS to Cloudflare, then the Cloudflare Tunnel and Cloudflare Access for the Dashboard only.
+- [ ] Hostinger keeps only the Supply Room, Maintenance Tracker and (for now) Lab Tracker. No Open Dental data goes there.
 
 ## Step 2 — Start the agents, in this order
 
