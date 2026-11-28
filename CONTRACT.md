@@ -6,14 +6,9 @@ Every module follows this contract so the Dashboard can show it as part of one s
 
 Every module reads these settings: `TDC_STAGE` (`design` or `live`), `PORT`, `MODULE_SECRET`, `GATEWAY_URL`, `GATEWAY_KEY`. The Dental Dashboard keeps each module's **base URL** in its settings. Nothing hard-codes `127.0.0.1` or a port.
 
-**Design stage (Hostinger):**
-- Each module is its own Hostinger Node.js app on its own subdomain, for example `daysheet-dev.<domain>`. It listens on the `PORT` Hostinger gives it.
-- The Dental Dashboard passes requests to the module's HTTPS base URL.
-- Because the module can be reached from the internet, it must reject every unsigned request except `/health`, exactly as in §3.
-- `GATEWAY_URL` points to the office gateway through its tunnel address (HTTPS). Each module checks that the gateway's `/health` says `"stage": "design"`, at startup and every 5 minutes, and stops serving patient pages if it doesn't. The local demo gateway (fake data) also says `"stage": "design"`.
-- Modules on Hostinger keep Open Dental data in memory only (short cache, a few minutes at most), never on disk.
+**Where (Ryan, 2026-11-27):** the Dental Dashboard, every module and the gateway run **in the office on the TrueNAS box**, with the real Open Dental, using the table below. When building and testing, `TDC_STAGE=design` and `GATEWAY_URL` points to the local demo gateway (fake data). In the office, `TDC_STAGE=live`. A module checks at startup, and every 5 minutes, that the gateway's `/health` reports the same `"stage"` as its own `TDC_STAGE`. If not, it stops serving patient pages, so a test setup can never be pointed at the real database by mistake.
 
-**Live stage (office server)** uses the table below.
+Nothing that serves Open Dental data runs on Hostinger. Outside the office, only the Dashboard is reachable, through a Cloudflare Tunnel behind Cloudflare Access.
 
 | Service | Listens on | Reached by |
 |---|---|---|
@@ -26,7 +21,7 @@ Every module reads these settings: `TDC_STAGE` (`design` or `live`), `PORT`, `MO
 | Gateway | `127.0.0.1:8787` | Modules only |
 | Next modules | `3105`–`3109` | Assigned in this file |
 
-In the live stage, modules **must** listen on `127.0.0.1` only. The port comes from `PORT`, defaulting to the value above.
+Modules **must** listen on `127.0.0.1` only (inside their container network on TrueNAS). The port comes from `PORT`, defaulting to the value above.
 
 ## 2. Pass-through
 
@@ -185,5 +180,6 @@ The Dashboard serves the shared pieces, and every module page includes them:
 - 2026-11-27: §3 `X-TDC-Office` header: clinic days, closed dates and time zone are set once in Dashboard → Settings → Office and passed to every module (issue #56, approved by Ryan). Not signed; modules fall back to their own defaults. Still contract version 1: additive.
 - 2026-11-16: new §5b, tiles from the standalone apps (Lab Tracker, Supply Room, Maintenance Tracker): `/tdc/tiles/<id>`, Bearer `TILE_TOKEN`, full links, counts and short labels, no patient names (issue #23, approved by Ryan). Still contract version 1: additive.
 - 2026-11-16: §6 now points to DESIGN.md, the shared design Ryan approved (warm base from the logo, one accent per module, Archivo/Figtree/JetBrains Mono served by the Dashboard, new list classes, phone layout). Still contract version 1: additive for modules.
-- 2026-11-16: the design stage uses Ryan's Open Dental **demo database** through the office gateway and a secure tunnel. The stage guard is now the gateway's `"stage"` (`design`/`live`) instead of `"fake": true`. No Open Dental data on disk on Hostinger. Still contract version 1.
+- 2026-11-27: there is no separate demo database. Dashboard, modules and gateway run in the office on TrueNAS with the real Open Dental (gateway `"stage": "live"`, every module key). Building and testing use fake data with `TDC_STAGE=design`. Modules check that the gateway's stage matches their own. Hostinger serves no Open Dental data. Outside use: Cloudflare Tunnel to the Dashboard only, behind Cloudflare Access. Still contract version 1.
+- 2026-11-16 (superseded 2026-11-27): the design stage uses Ryan's Open Dental **demo database** through the office gateway and a secure tunnel. The stage guard is now the gateway's `"stage"` (`design`/`live`) instead of `"fake": true`. No Open Dental data on disk on Hostinger. Still contract version 1.
 - 2026-11-15: clarified the signature (key, `pathAndQuery`), tiles are requested as the logged-in user, pass-through cookie and redirect rules, no inline scripts, `X-TDC-Background` (issues #6, #7, #8). Still contract version 1: no module had been built yet.
