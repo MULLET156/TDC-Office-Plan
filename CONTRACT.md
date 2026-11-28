@@ -47,6 +47,7 @@ Only the Dashboard handles logins. It strips any incoming `X-TDC-*` headers from
 | `X-TDC-Name` | `Jane Smith` (display name) |
 | `X-TDC-Roles` | `doctor,owner` (comma-separated, from the list below) |
 | `X-TDC-Base` | `/m/daysheet` |
+| `X-TDC-Office` | `tz=America/Los_Angeles;days=1,2,3,4;closed=2026-12-24,2026-12-25` (see below) |
 | `X-TDC-Time` | Unix time in milliseconds |
 | `X-TDC-Sig` | hex HMAC-SHA256 (see below) |
 
@@ -55,6 +56,7 @@ Only the Dashboard handles logins. It strips any incoming `X-TDC-*` headers from
 - `pathAndQuery` is the request target exactly as the module receives it (`req.url` in Node): the path after the prefix is removed, plus the query string.
 - The six values are joined with a single `\n`; `method` is upper-case. The result is lower-case hex.
 - `X-TDC-Name` is not signed. Names with non-ASCII letters (José) are percent-encoded; decode with `decodeURIComponent`.
+- `X-TDC-Office` is not signed either (it grants nothing). It carries the office settings from Dashboard → Settings → Office, the one place they're set: `tz` the office time zone (IANA name); `days` the clinic days, 0 = Sunday … 6 = Saturday; `closed` the closed dates in the next 12 months, `yyyy-MM-dd`, comma-separated, at most 60. Parts are separated by `;`, and any part may be missing or empty. A module **uses these instead of its own settings**, and falls back to its own defaults when the header or a part is missing (an older Dashboard, `/health`, tests). Reference parser: `officeFromHeaders(req)` in `tdc-verify.js`, returning `{ tz, days, closed }`.
 - Reference code: `examples/hello-module/tdc-verify.js` in TDC-Dental-Dashboard. Check a module with `scripts/check-module.js` there.
 - Each module has its own `MODULE_SECRET`, at least 32 random bytes in hex, in its `.env`. The Dashboard holds a copy of each one in its own config.
 - A module **must reject** with `401` any request whose signature is wrong or missing, or whose time is more than 30 seconds from now. Compare signatures with `crypto.timingSafeEqual`.
@@ -180,6 +182,7 @@ The Dashboard serves the shared pieces, and every module page includes them:
 
 ## Changes
 
+- 2026-11-27: §3 `X-TDC-Office` header: clinic days, closed dates and time zone are set once in Dashboard → Settings → Office and passed to every module (issue #56, approved by Ryan). Not signed; modules fall back to their own defaults. Still contract version 1: additive.
 - 2026-11-16: new §5b, tiles from the standalone apps (Lab Tracker, Supply Room, Maintenance Tracker): `/tdc/tiles/<id>`, Bearer `TILE_TOKEN`, full links, counts and short labels, no patient names (issue #23, approved by Ryan). Still contract version 1: additive.
 - 2026-11-16: §6 now points to DESIGN.md, the shared design Ryan approved (warm base from the logo, one accent per module, Archivo/Figtree/JetBrains Mono served by the Dashboard, new list classes, phone layout). Still contract version 1: additive for modules.
 - 2026-11-16: the design stage uses Ryan's Open Dental **demo database** through the office gateway and a secure tunnel. The stage guard is now the gateway's `"stage"` (`design`/`live`) instead of `"fake": true`. No Open Dental data on disk on Hostinger. Still contract version 1.
